@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 from database import get_db
@@ -14,28 +14,31 @@ def home():
 @router.post("/send-alert")
 def send_alert(data: AlertRequest, db: Session = Depends(get_db)):
     try:
-        alert_date = datetime.strptime(data.date, "%Y-%m-%d").date()
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Invalid date format")
+        alert_date = data.date  # Already a date object from Pydantic
 
-    today = datetime.today().date()
-    if not (today <= alert_date <= today + timedelta(days=7)):
-        return {"message": "Email not sent, date above 7 days."}
+        today = datetime.today().date()
+        if not (today <= alert_date <= today + timedelta(days=7)):
+            return {"message": "Email not sent, date above 7 days."}
 
-    if data.percentage < 60:
-        return {"message": "Percentage too low. No alert sent."}
+        if data.percentage < 60:
+            return {"message": "Percentage too low. No alert sent."}
 
-    query = text("SELECT email FROM users WHERE location = :loc")
-    users = db.execute(query, {"loc": data.location}).fetchall()
+        query = text("SELECT email FROM users WHERE location = :loc")
+        users = db.execute(query, {"loc": data.location}).fetchall()
 
-    if not users:
-        return {"message": "No users found at this location."}
+        if not users:
+            return {"message": "No users found at this location."}
 
-    for user in users:
-        send_email(
-            to_email=user[0], 
-            subject=f"Disaster Alert for {data.location}",
-            body=f"There is a {data.percentage}% chance of a disaster on {data.date}. Stay alert!"
-        )
+        for user in users:
+            try:
+                send_email(
+                    to_email=user[0],
+                    subject=f"Disaster Alert for {data.location}",
+                    body=f"There is a {data.percentage}% chance of a disaster on {data.date}. Stay alert!"
+                )
+            except Exception as e:
+                return {"error": f"Failed to send email to {user[0]}: {str(e)}"}
 
-    return {"message": f"Sent alert to {len(users)} users"}
+        return {"message": f"Sent alert to {len(users)} users"}
+    except Exception as e:
+        return {"error": str(e)}
