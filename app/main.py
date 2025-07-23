@@ -2,7 +2,11 @@ from fastapi import FastAPI
 from mail_api.routes import router as alert_router
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+app = FastAPI(
+    title="TerraGuard - Flood Prediction Mailer API",
+    description="An API for predicting flood likelihood based on rainfall, elevation, and soil moisture.",
+    version="1.0.0"
+)
 
 app.add_middleware(
     CORSMiddleware,
