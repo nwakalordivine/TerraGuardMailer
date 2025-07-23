@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.mail_api.routes import router as alert_router
+from mail_api.routes import router as alert_router
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
