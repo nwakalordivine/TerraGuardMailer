@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
-from database import get_db
-from schemas import AlertRequest
-from services.email_sender import send_email
+from app.database import get_db
+from app.schemas import AlertRequest
+from app.services.email_sender import send_email
 from sqlalchemy import text
 
 router = APIRouter()

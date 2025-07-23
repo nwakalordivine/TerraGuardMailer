@@ -1,8 +1,6 @@
 from fastapi import FastAPI
 from app.mail_api.routes import router as alert_router
 from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
-
 
 app = FastAPI()
 
@@ -15,7 +13,6 @@ app.add_middleware(
 )
 
 app.include_router(alert_router, prefix="/api")
-handler = app
 
-if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+# Vercel expects a 'handler' variable for ASGI apps
+handler = app
