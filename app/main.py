@@ -1,7 +1,11 @@
 from fastapi import FastAPI
-from .mail_api.routes import router as alert_router
+from app.mail_api.routes import router as alert_router
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
+
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 app = FastAPI()
 
