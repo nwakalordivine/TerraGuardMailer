@@ -9,9 +9,9 @@ from sqlalchemy import text
 router = APIRouter()
 @router.get("/")
 def home():
-    return {"message": "Welcome to TerraGuard Mailer API"}
+    return "Welcome to TerraGuard Mailer API"
 
-@router.post("/send-alert")
+@router.post("/api/send-alert")
 def send_alert(data: AlertRequest, db: Session = Depends(get_db)):
     try:
         alert_date = data.date  # Already a date object from Pydantic

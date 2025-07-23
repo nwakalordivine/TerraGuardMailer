@@ -12,7 +12,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(alert_router, prefix="/api")
+app.include_router(alert_router, prefix="")
 
 # Vercel expects a 'handler' variable for ASGI apps
 handler = app
