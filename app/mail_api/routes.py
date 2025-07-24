@@ -87,9 +87,10 @@ def mailer(data: User):
     try:
         send_email(
             to_email=data.email,
-            subject="Hello from TerraGuard Mailer",
-            body=f"Hi {data.name}, you’ll get early warnings if there’s a predicted flood risk near you. Stay alert and stay safe!"
+            subject="Hello from TerraGuard",
+            body=f"Hi {data.name},\nYou’ll get early warnings if there's a predicted flood risk near you. Stay alert and stay safe!"
         )
         return {"message": "Email sent successfully"}
     except Exception as e:
         return {"error": str(e)}
+ 
